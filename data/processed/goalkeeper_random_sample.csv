@@ -1,0 +1,31 @@
+Player,Pos,Squad,MP,Starts,Min,SoTA,Saves,Save%,W,D,L,CS,CS%,Team,Stage
+Emiliano Martínez,GK,ar Argentina,8,8,810,28,20,71.4,7,0,1,2,25.0,Argentina,Knockout
+Senne Lammens,GK,be Belgium,1,0,20,3,2,66.7,0,0,0,0,,Belgium,Knockout
+Gregor Kobel,GK,ch Switzerland,6,6,600,26,20,76.9,3,2,1,2,33.3,Switzerland,Knockout
+Raúl Rangel,GK,mx Mexico,5,5,437,11,8,72.7,4,0,1,4,80.0,Mexico,Knockout
+Oussama Benbot,GK,dz Algeria,1,1,90,3,0,0.0,0,1,0,0,0.0,Algeria,Knockout
+Hernán Galíndez,GK,ec Ecuador,4,4,360,13,9,69.2,1,1,2,1,25.0,Ecuador,Knockout
+Jacob Widell Zetterström,GK,se Sweden,2,2,180,15,11,73.3,0,1,1,0,0.0,Sweden,Knockout
+Alexander Schlager,GK,at Austria,4,4,360,22,13,59.1,1,1,2,0,0.0,Austria,Knockout
+Luca Zidane,GK,dz Algeria,3,3,270,14,8,57.1,1,0,2,0,0.0,Algeria,Knockout
+Diogo Costa,GK,pt Portugal,5,5,450,22,19,86.4,2,2,1,2,40.0,Portugal,Knockout
+Jordan Pickford,GK,eng England,7,7,660,23,15,65.2,5,1,1,2,28.6,England,Knockout
+Mory Diaw,GK,sn Senegal,3,2,238,7,4,57.1,1,0,1,1,50.0,Senegal,Knockout
+Orlando Gill,GK,py Paraguay,5,5,480,29,23,79.3,1,2,2,2,40.0,Paraguay,Knockout
+Zion Suzuki,GK,jp Japan,4,4,360,17,12,70.6,1,2,1,1,25.0,Japan,Knockout
+Nikola Vasilj,GK,ba Bosnia–Herz,4,4,360,14,6,42.9,1,1,2,0,0.0,Bosnia–Herz,Knockout
+Yazeed Abulaila,GK,jo Jordan,3,3,270,16,8,50.0,0,0,3,0,0.0,Jordan,Group-stage elimination
+Mouhib Chamakh,GK,tn Tunisia,1,1,90,6,1,16.7,0,0,1,0,0.0,Tunisia,Group-stage elimination
+Orlando Mosquera,GK,pa Panama,3,3,270,11,7,63.6,0,0,3,0,0.0,Panama,Group-stage elimination
+Mahmoud Abunada,GK,qa Qatar,3,3,270,22,12,54.5,0,1,2,0,0.0,Qatar,Group-stage elimination
+Angus Gunn,GK,sct Scotland,3,3,270,12,8,66.7,1,0,2,1,33.3,Scotland,Group-stage elimination
+Eloy Room,GK,cw Curaçao,3,3,270,29,20,69.0,0,1,2,1,33.3,Curaçao,Group-stage elimination
+Alireza Beiranvand,GK,ir IR Iran,3,3,270,18,15,83.3,0,3,0,1,33.3,IR Iran,Group-stage elimination
+Abduvohid Nematov,GK,uz Uzbekistan,2,2,180,13,5,38.5,0,0,2,0,0.0,Uzbekistan,Group-stage elimination
+Johny Placide,GK,ht Haiti,3,3,270,19,11,57.9,0,0,3,0,0.0,Haiti,Group-stage elimination
+Kim Seung-gyu,GK,kr Korea Republic,3,3,270,12,9,75.0,1,0,2,0,0.0,Korea Republic,Group-stage elimination
+Ahmed Basil,GK,iq Iraq,2,2,135,7,3,42.9,0,0,2,0,0.0,Iraq,Group-stage elimination
+Jalal Hassan,GK,iq Iraq,2,1,135,16,8,50.0,0,0,1,0,0.0,Iraq,Group-stage elimination
+Utkir Yusupov,GK,uz Uzbekistan,1,1,90,4,1,25.0,0,0,1,0,0.0,Uzbekistan,Group-stage elimination
+Uğurcan Çakır,GK,tr Türkiye,3,3,270,13,8,61.5,1,0,2,0,0.0,Türkiye,Group-stage elimination
+Fernando Muslera,GK,uy Uruguay,3,3,225,8,4,50.0,0,2,1,0,0.0,Uruguay,Group-stage elimination
