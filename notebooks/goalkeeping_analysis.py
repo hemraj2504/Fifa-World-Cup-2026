@@ -1,199 +1,9 @@
 # ============================================================
 # FIFA WORLD CUP 2026 - GOALKEEPING ANALYSIS
-# Stage 1: Load and Inspect Raw Data
+# Complete Analysis Script
 # ============================================================
 
-# ------------------------------------------------------------
-# 1. Import required libraries
-# ------------------------------------------------------------
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy import stats
-
-print("=" * 60)
-print("FIFA WORLD CUP 2026 - GOALKEEPING ANALYSIS")
-print("=" * 60)
-
-print("\nLibraries loaded successfully.")
-
-
-# ------------------------------------------------------------
-# 2. Load the raw datasets
-# ------------------------------------------------------------
-
-# Goalkeeping dataset
-goalkeeping = pd.read_csv(
-    "C:\\Users\\bhusa\\OneDrive\\Desktop\\FIFA_Python\\data\\fbref_goalkeeping_stats_2026_raw.csv",
-    header=1
-)
-
-# Match results dataset
-matches = pd.read_csv(
-    "C:\\Users\\bhusa\\OneDrive\\Desktop\\FIFA_Python\\data\\fbref_world_cup_2026_matches_raw.csv"
-)
-
-print("\nRaw datasets loaded successfully.")
-
-
-# ------------------------------------------------------------
-# 3. Create working copies
-# ------------------------------------------------------------
-
-# We never modify the original raw data directly.
-goalkeeping_clean = goalkeeping.copy()
-matches_clean = matches.copy()
-
-print("Working copies created.")
-
-
-# ------------------------------------------------------------
-# 4. Inspect Goalkeeping dataset
-# ------------------------------------------------------------
-
-print("\n" + "=" * 60)
-print("GOALKEEPING DATASET")
-print("=" * 60)
-
-print("\nShape:")
-print(goalkeeping_clean.shape)
-
-print("\nColumns:")
-print(goalkeeping_clean.columns.tolist())
-
-print("\nFirst 10 rows:")
-print(goalkeeping_clean.head(10))
-
-
-# ------------------------------------------------------------
-# 5. Inspect Match Results dataset
-# ------------------------------------------------------------
-
-print("\n" + "=" * 60)
-print("MATCH RESULTS DATASET")
-print("=" * 60)
-
-print("\nShape:")
-print(matches_clean.shape)
-
-print("\nColumns:")
-print(matches_clean.columns.tolist())
-
-print("\nFirst 10 rows:")
-print(matches_clean.head(10))
-
-
-# ------------------------------------------------------------
-# 6. Check missing values
-# ------------------------------------------------------------
-
-print("\n" + "=" * 60)
-print("MISSING VALUES")
-print("=" * 60)
-
-print("\nGoalkeeping missing values:")
-print(goalkeeping_clean.isna().sum())
-
-print("\nMatch results missing values:")
-print(matches_clean.isna().sum())
-
-
-# ------------------------------------------------------------
-# 7. Check data types
-# ------------------------------------------------------------
-
-print("\n" + "=" * 60)
-print("DATA TYPES")
-print("=" * 60)
-
-print("\nGoalkeeping data types:")
-print(goalkeeping_clean.dtypes)
-
-print("\nMatch results data types:")
-print(matches_clean.dtypes)
-
-
-# ------------------------------------------------------------
-# 8. Check the Save% variable
-# ------------------------------------------------------------
-
-print("\n" + "=" * 60)
-print("SAVE% INSPECTION")
-print("=" * 60)
-
-print("\nSave% values:")
-print(goalkeeping_clean["Save%"].head(20))
-
-print("\nSave% data type:")
-print(goalkeeping_clean["Save%"].dtype)
-
-print("\nNumber of missing Save% values:")
-print(goalkeeping_clean["Save%"].isna().sum())
-
-
-# ------------------------------------------------------------
-# 9. Check goalkeeper team names
-# ------------------------------------------------------------
-
-print("\n" + "=" * 60)
-print("GOALKEEPER TEAM NAMES")
-print("=" * 60)
-
-print(
-    goalkeeping_clean["Squad"]
-    .dropna()
-    .unique()
-)
-
-
-# ------------------------------------------------------------
-# 10. Check match team names
-# ------------------------------------------------------------
-
-print("\n" + "=" * 60)
-print("MATCH HOME TEAM NAMES")
-print("=" * 60)
-
-print(
-    matches_clean["Home"]
-    .dropna()
-    .unique()
-)
-
-
-print("\n" + "=" * 60)
-print("MATCH AWAY TEAM NAMES")
-print("=" * 60)
-
-print(
-    matches_clean["Away"]
-    .dropna()
-    .unique()
-)
-
-
-# ------------------------------------------------------------
-# 11. Final message
-# ------------------------------------------------------------
-
-print("\n" + "=" * 60)
-print("STAGE 1 COMPLETE")
-print("=" * 60)
-
-print(
-    "\nThe raw datasets have been loaded and inspected."
-)
-
-print(
-    "\nNext stage: Data cleaning and team-name standardisation."
-)
-
-# ============================================================
-# FIFA WORLD CUP 2026 - GOALKEEPING ANALYSIS
-# Stage 2: Data Cleaning and Group Classification
-# ============================================================
+from pathlib import Path
 
 import pandas as pd
 import numpy as np
@@ -202,49 +12,65 @@ import seaborn as sns
 from scipy import stats
 
 
-print("=" * 70)
+# ============================================================
+# PROJECT PATHS
+# ============================================================
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DATA_DIR = PROJECT_ROOT / "data"
+
+GOALKEEPING_FILE = DATA_DIR / "C:\\Users\\bhusa\\OneDrive\\Desktop\\FIFA_Python\\data\\fbref_goalkeeping_stats_2026_raw.csv"
+MATCH_FILE = DATA_DIR / "C:\\Users\\bhusa\\OneDrive\\Desktop\\FIFA_Python\\data\\fbref_world_cup_2026_matches_raw.csv"
+
+
+print("=" * 75)
 print("FIFA WORLD CUP 2026 - GOALKEEPING ANALYSIS")
-print("STAGE 2: DATA CLEANING AND GROUP CLASSIFICATION")
-print("=" * 70)
+print("=" * 75)
 
 
 # ============================================================
-# 1. LOAD RAW DATA
+# STAGE 1 - LOAD RAW DATA
 # ============================================================
+
+print("\n" + "=" * 75)
+print("STAGE 1: LOAD RAW DATA")
+print("=" * 75)
+
 
 goalkeeping = pd.read_csv(
-    "C:\\Users\\bhusa\\OneDrive\\Desktop\\FIFA_Python\\data\\fbref_goalkeeping_stats_2026_raw.csv",
+    GOALKEEPING_FILE,
     header=1
 )
 
 matches = pd.read_csv(
-    "C:\\Users\\bhusa\\OneDrive\\Desktop\\FIFA_Python\\data\\fbref_world_cup_2026_matches_raw.csv"
+    MATCH_FILE
 )
 
-print("\nRaw datasets loaded successfully.")
+
+print("\nDatasets loaded successfully.")
+
+print("\nGoalkeeping shape:")
+print(goalkeeping.shape)
+
+print("\nMatch data shape:")
+print(matches.shape)
 
 
 # ============================================================
-# 2. CREATE WORKING COPIES
+# STAGE 2 - DATA CLEANING
 # ============================================================
+
+print("\n" + "=" * 75)
+print("STAGE 2: DATA CLEANING AND CLASSIFICATION")
+print("=" * 75)
+
 
 goalkeeping_clean = goalkeeping.copy()
 matches_clean = matches.copy()
 
-print("Working copies created.")
-
-
-# ============================================================
-# 3. CLEAN GOALKEEPING DATA
-# ============================================================
-
-print("\n" + "=" * 70)
-print("CLEANING GOALKEEPING DATA")
-print("=" * 70)
-
 
 # ------------------------------------------------------------
-# 3.1 Keep only the columns required for this analysis
+# Keep relevant goalkeeper columns
 # ------------------------------------------------------------
 
 goalkeeping_clean = goalkeeping_clean[
@@ -266,11 +92,9 @@ goalkeeping_clean = goalkeeping_clean[
     ]
 ].copy()
 
-print("\nRelevant columns selected.")
-
 
 # ------------------------------------------------------------
-# 3.2 Standardise the Save% variable
+# Convert Save% to numeric
 # ------------------------------------------------------------
 
 goalkeeping_clean["Save%"] = pd.to_numeric(
@@ -278,585 +102,283 @@ goalkeeping_clean["Save%"] = pd.to_numeric(
     errors="coerce"
 )
 
-print("\nSave% converted to numeric format.")
-
 
 # ------------------------------------------------------------
-# 3.3 Inspect missing Save% values
+# Show missing Save%
 # ------------------------------------------------------------
-
-missing_save = goalkeeping_clean[
-    goalkeeping_clean["Save%"].isna()
-]
 
 print("\nGoalkeepers with missing Save%:")
-print(
-    missing_save[
-        ["Player", "Squad", "SoTA", "Saves", "Save%"]
-    ]
-)
-
-
-# ------------------------------------------------------------
-# 3.4 Remove records where Save% is undefined
-# ------------------------------------------------------------
-
-before_save_cleaning = len(goalkeeping_clean)
-
-goalkeeping_clean = goalkeeping_clean.dropna(
-    subset=["Save%"]
-).copy()
-
-after_save_cleaning = len(goalkeeping_clean)
 
 print(
-    f"\nRecords before removing missing Save%: "
-    f"{before_save_cleaning}"
-)
-
-print(
-    f"Records after removing missing Save%: "
-    f"{after_save_cleaning}"
-)
-
-print(
-    f"Records removed: "
-    f"{before_save_cleaning - after_save_cleaning}"
-)
-
-
-# ============================================================
-# 4. STANDARDISE GOALKEEPER TEAM NAMES
-# ============================================================
-
-print("\n" + "=" * 70)
-print("STANDARDISING GOALKEEPER TEAM NAMES")
-print("=" * 70)
-
-
-# Goalkeeping Squad values look like:
-# "au Australia"
-# "br Brazil"
-# "eng England"
-
-# Remove the country code from the beginning.
-
-goalkeeping_clean["Team"] = (
-    goalkeeping_clean["Squad"]
-    .str.replace(
-        r"^[a-z]{2,3}\s",
-        "",
-        regex=True
-    )
-    .str.strip()
-)
-
-print("\nCleaned goalkeeper team names:")
-print(
-    sorted(goalkeeping_clean["Team"].unique())
-)
-
-
-# ============================================================
-# 5. CLEAN MATCH RESULTS
-# ============================================================
-
-print("\n" + "=" * 70)
-print("CLEANING MATCH RESULTS")
-print("=" * 70)
-
-
-# ------------------------------------------------------------
-# 5.1 Remove completely blank rows
-# ------------------------------------------------------------
-
-before_match_cleaning = len(matches_clean)
-
-matches_clean = matches_clean.dropna(
-    how="all"
-).copy()
-
-after_match_cleaning = len(matches_clean)
-
-print(
-    f"\nMatch rows before removing blank rows: "
-    f"{before_match_cleaning}"
-)
-
-print(
-    f"Match rows after removing blank rows: "
-    f"{after_match_cleaning}"
-)
-
-print(
-    f"Blank rows removed: "
-    f"{before_match_cleaning - after_match_cleaning}"
-)
-
-
-# ------------------------------------------------------------
-# 5.2 Standardise Home team names
-# ------------------------------------------------------------
-
-# Home teams look like:
-# "Mexico mx"
-# "Brazil br"
-# "Australia au"
-
-matches_clean["Home_Team"] = (
-    matches_clean["Home"]
-    .str.replace(
-        r"\s[a-z]{2,3}$",
-        "",
-        regex=True
-    )
-    .str.strip()
-)
-
-
-# ------------------------------------------------------------
-# 5.3 Standardise Away team names
-# ------------------------------------------------------------
-
-# Away teams look like:
-# "za South Africa"
-# "cz Czechia"
-# "ma Morocco"
-
-matches_clean["Away_Team"] = (
-    matches_clean["Away"]
-    .str.replace(
-        r"^[a-z]{2,3}\s",
-        "",
-        regex=True
-    )
-    .str.strip()
-)
-
-
-print("\nHome and Away team names standardised.")
-
-
-# ============================================================
-# 6. CHECK TEAM NAME MATCHING
-# ============================================================
-
-print("\n" + "=" * 70)
-print("CHECKING TEAM NAME MATCHING")
-print("=" * 70)
-
-
-goalkeeping_teams = set(
-    goalkeeping_clean["Team"].dropna()
-)
-
-match_home_teams = set(
-    matches_clean["Home_Team"].dropna()
-)
-
-match_away_teams = set(
-    matches_clean["Away_Team"].dropna()
-)
-
-match_teams = (
-    match_home_teams.union(match_away_teams)
-)
-
-
-print("\nNumber of teams in goalkeeping dataset:")
-print(len(goalkeeping_teams))
-
-print("\nNumber of teams in match dataset:")
-print(len(match_teams))
-
-
-# ------------------------------------------------------------
-# Teams in goalkeeping but not matches
-# ------------------------------------------------------------
-
-goalkeeping_only = (
-    goalkeeping_teams - match_teams
-)
-
-print(
-    "\nTeams found in goalkeeping data "
-    "but not in match data:"
-)
-
-print(
-    sorted(goalkeeping_only)
-)
-
-
-# ------------------------------------------------------------
-# Teams in matches but not goalkeeping
-# ------------------------------------------------------------
-
-matches_only = (
-    match_teams - goalkeeping_teams
-)
-
-print(
-    "\nTeams found in match data "
-    "but not in goalkeeping data:"
-)
-
-print(
-    sorted(matches_only)
-)
-
-
-# ============================================================
-# 7. IDENTIFY KNOCKOUT-STAGE TEAMS
-# ============================================================
-
-print("\n" + "=" * 70)
-print("IDENTIFYING KNOCKOUT-STAGE TEAMS")
-print("=" * 70)
-
-
-# Any team appearing in a match after the Group Stage
-# progressed to the knockout stage.
-
-knockout_matches = matches_clean[
-    matches_clean["Round"] != "Group stage"
-].copy()
-
-
-# Get teams appearing in knockout-stage matches.
-
-knockout_home_teams = set(
-    knockout_matches["Home_Team"].dropna()
-)
-
-knockout_away_teams = set(
-    knockout_matches["Away_Team"].dropna()
-)
-
-knockout_teams = (
-    knockout_home_teams.union(knockout_away_teams)
-)
-
-
-print("\nNumber of knockout-stage teams:")
-print(len(knockout_teams))
-
-
-print("\nKnockout-stage teams:")
-
-for team in sorted(knockout_teams):
-    print("-", team)
-
-
-# ============================================================
-# 8. CLASSIFY GOALKEEPERS INTO TWO GROUPS
-# ============================================================
-
-print("\n" + "=" * 70)
-print("CLASSIFYING GOALKEEPERS")
-print("=" * 70)
-
-
-goalkeeping_clean["Stage"] = np.where(
-    goalkeeping_clean["Team"].isin(knockout_teams),
-    "Knockout",
-    "Group-stage elimination"
-)
-
-
-# ============================================================
-# 9. DISPLAY CLASSIFICATION RESULTS
-# ============================================================
-
-print("\nGoalkeeper classification:")
-
-print(
-    goalkeeping_clean[
-        [
-            "Player",
-            "Team",
-            "Save%",
-            "Stage"
-        ]
-    ].sort_values(
-        by="Team"
-    ).to_string(index=False)
-)
-
-
-# ============================================================
-# 10. CHECK GROUP COUNTS
-# ============================================================
-
-print("\n" + "=" * 70)
-print("GROUP COUNTS")
-print("=" * 70)
-
-group_counts = (
-    goalkeeping_clean["Stage"]
-    .value_counts()
-)
-
-print(group_counts)
-
-
-# ============================================================
-# 11. CHECK SAVE% BY GROUP
-# ============================================================
-
-print("\n" + "=" * 70)
-print("SAVE% BY GROUP")
-print("=" * 70)
-
-
-print(
-    goalkeeping_clean
-    .groupby("Stage")["Save%"]
-    .describe()
-)
-
-
-# ============================================================
-# 12. FINAL DATASET CHECK
-# ============================================================
-
-print("\n" + "=" * 70)
-print("FINAL CLEAN DATASET CHECK")
-print("=" * 70)
-
-
-print("\nFinal number of goalkeeper observations:")
-print(len(goalkeeping_clean))
-
-print("\nMissing values in key variables:")
-
-print(
-    goalkeeping_clean[
-        ["Player", "Team", "Save%", "Stage"]
-    ].isna().sum()
-)
-
-
-print("\nStage 2 completed successfully.")
-
-print(
-    "\nNext stage: Descriptive statistics, "
-    "visualisation, confidence interval, "
-    "and independent two-sample t-test."
-)
-
-# ============================================================
-# FIFA WORLD CUP 2026 - GOALKEEPING ANALYSIS
-# Stage 3: Descriptive Statistics, Visualisation,
-#          Confidence Interval and Independent T-Test
-# ============================================================
-
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy import stats
-
-
-print("=" * 70)
-print("FIFA WORLD CUP 2026 - GOALKEEPING ANALYSIS")
-print("STAGE 3: STATISTICAL ANALYSIS")
-print("=" * 70)
-
-
-# ============================================================
-# 1. LOAD DATA
-# ============================================================
-
-goalkeeping = pd.read_csv(
-    "C:\\Users\\bhusa\\OneDrive\\Desktop\\FIFA_Python\\data\\fbref_goalkeeping_stats_2026_raw.csv",
-    header=1
-)
-
-matches = pd.read_csv(
-    "C:\\Users\\bhusa\\OneDrive\\Desktop\\FIFA_Python\\data\\fbref_world_cup_2026_matches_raw.csv"
-)
-
-
-# ============================================================
-# 2. CREATE WORKING COPIES
-# ============================================================
-
-goalkeeping_clean = goalkeeping.copy()
-matches_clean = matches.copy()
-
-
-# ============================================================
-# 3. CLEAN GOALKEEPING DATA
-# ============================================================
-
-goalkeeping_clean = goalkeeping_clean[
-    [
-        "Player",
-        "Pos",
-        "Squad",
-        "MP",
-        "Starts",
-        "Min",
-        "SoTA",
-        "Saves",
-        "Save%",
-        "W",
-        "D",
-        "L",
-        "CS",
-        "CS%"
-    ]
-].copy()
-
-
-# Convert Save% to numeric
-goalkeeping_clean["Save%"] = pd.to_numeric(
-    goalkeeping_clean["Save%"],
-    errors="coerce"
-)
-
-
-# Remove undefined Save%
-goalkeeping_clean = goalkeeping_clean.dropna(
-    subset=["Save%"]
-).copy()
-
-
-# ============================================================
-# 4. STANDARDISE GOALKEEPER TEAM NAMES
-# ============================================================
-
-goalkeeping_clean["Team"] = (
-    goalkeeping_clean["Squad"]
-    .str.replace(
-        r"^[a-z]{2,3}\s",
-        "",
-        regex=True
-    )
-    .str.strip()
-)
-
-
-# ============================================================
-# 5. CLEAN MATCH DATA
-# ============================================================
-
-# Remove completely blank rows
-matches_clean = matches_clean.dropna(
-    how="all"
-).copy()
-
-
-# Clean Home team names
-matches_clean["Home_Team"] = (
-    matches_clean["Home"]
-    .str.replace(
-        r"\s[a-z]{2,3}$",
-        "",
-        regex=True
-    )
-    .str.strip()
-)
-
-
-# Clean Away team names
-matches_clean["Away_Team"] = (
-    matches_clean["Away"]
-    .str.replace(
-        r"^[a-z]{2,3}\s",
-        "",
-        regex=True
-    )
-    .str.strip()
-)
-
-
-# ============================================================
-# 6. IDENTIFY KNOCKOUT-STAGE TEAMS
-# ============================================================
-
-knockout_matches = matches_clean[
-    matches_clean["Round"] != "Group stage"
-].copy()
-
-
-knockout_home_teams = set(
-    knockout_matches["Home_Team"].dropna()
-)
-
-knockout_away_teams = set(
-    knockout_matches["Away_Team"].dropna()
-)
-
-
-knockout_teams = (
-    knockout_home_teams.union(knockout_away_teams)
-)
-
-
-print("\nNumber of knockout-stage teams:")
-print(len(knockout_teams))
-
-
-# ============================================================
-# 7. CLASSIFY GOALKEEPERS
-# ============================================================
-
-goalkeeping_clean["Stage"] = np.where(
-    goalkeeping_clean["Team"].isin(knockout_teams),
-    "Knockout",
-    "Group-stage elimination"
-)
-
-
-# ============================================================
-# 8. DISPLAY FINAL ANALYSIS DATA
-# ============================================================
-
-print("\n" + "=" * 70)
-print("FINAL ANALYSIS DATA")
-print("=" * 70)
-
-print(
-    goalkeeping_clean[
-        [
-            "Player",
-            "Team",
-            "Save%",
-            "Stage"
-        ]
+    goalkeeping_clean.loc[
+        goalkeeping_clean["Save%"].isna(),
+        ["Player", "Squad", "Min", "SoTA", "Saves", "Save%"]
     ].to_string(index=False)
 )
 
 
-# ============================================================
-# 9. GROUP COUNTS
-# ============================================================
+# ------------------------------------------------------------
+# Remove undefined Save%
+# ------------------------------------------------------------
 
-print("\n" + "=" * 70)
-print("NUMBER OF GOALKEEPERS IN EACH GROUP")
-print("=" * 70)
+raw_count = len(goalkeeping_clean)
 
-group_counts = (
+goalkeeping_clean = goalkeeping_clean.dropna(
+    subset=["Save%"]
+).copy()
+
+valid_count = len(goalkeeping_clean)
+
+
+print("\nGoalkeepers before removing undefined Save%:")
+print(raw_count)
+
+print("\nValid goalkeepers after cleaning:")
+print(valid_count)
+
+print("\nGoalkeepers removed:")
+print(raw_count - valid_count)
+
+
+# ------------------------------------------------------------
+# Clean goalkeeper team names
+# ------------------------------------------------------------
+
+goalkeeping_clean["Team"] = (
+    goalkeeping_clean["Squad"]
+    .str.replace(
+        r"^[a-z]{2,3}\s",
+        "",
+        regex=True
+    )
+    .str.strip()
+)
+
+
+# ------------------------------------------------------------
+# Remove completely blank match rows
+# ------------------------------------------------------------
+
+matches_clean = matches_clean.dropna(
+    how="all"
+).copy()
+
+
+# ------------------------------------------------------------
+# Clean home team names
+# ------------------------------------------------------------
+
+matches_clean["Home_Team"] = (
+    matches_clean["Home"]
+    .str.replace(
+        r"\s[a-z]{2,3}$",
+        "",
+        regex=True
+    )
+    .str.strip()
+)
+
+
+# ------------------------------------------------------------
+# Clean away team names
+# ------------------------------------------------------------
+
+matches_clean["Away_Team"] = (
+    matches_clean["Away"]
+    .str.replace(
+        r"^[a-z]{2,3}\s",
+        "",
+        regex=True
+    )
+    .str.strip()
+)
+
+
+# ------------------------------------------------------------
+# Validate team matching
+# ------------------------------------------------------------
+
+goalkeeper_teams = set(
+    goalkeeping_clean["Team"].dropna()
+)
+
+match_teams = set(
+    matches_clean["Home_Team"].dropna()
+).union(
+    set(matches_clean["Away_Team"].dropna())
+)
+
+
+print("\nNumber of teams in goalkeeper data:")
+print(len(goalkeeper_teams))
+
+print("\nNumber of teams in match data:")
+print(len(match_teams))
+
+print("\nGoalkeeper teams not found in match data:")
+print(sorted(goalkeeper_teams - match_teams))
+
+print("\nMatch teams not found in goalkeeper data:")
+print(sorted(match_teams - goalkeeper_teams))
+
+
+# ------------------------------------------------------------
+# Identify knockout-stage teams
+# ------------------------------------------------------------
+
+knockout_matches = matches_clean[
+    matches_clean["Round"] != "Group stage"
+].copy()
+
+
+knockout_teams = set(
+    knockout_matches["Home_Team"].dropna()
+).union(
+    set(knockout_matches["Away_Team"].dropna())
+)
+
+
+print("\nNumber of knockout-stage teams:")
+print(len(knockout_teams))
+
+
+# ------------------------------------------------------------
+# Classify goalkeepers
+# ------------------------------------------------------------
+
+goalkeeping_clean["Stage"] = np.where(
+    goalkeeping_clean["Team"].isin(knockout_teams),
+    "Knockout",
+    "Group-stage elimination"
+)
+
+
+print("\nEligible goalkeeper population by group:")
+
+print(
     goalkeeping_clean["Stage"]
     .value_counts()
 )
 
-print(group_counts)
+
+# ============================================================
+# STAGE 3 - STRATIFIED RANDOM SAMPLING
+# ============================================================
+
+print("\n" + "=" * 75)
+print("STAGE 3: STRATIFIED RANDOM SAMPLING")
+print("=" * 75)
+
+
+RANDOM_SEED = 42
+SAMPLE_SIZE_PER_GROUP = 15
+
+
+# ------------------------------------------------------------
+# Split into strata
+# ------------------------------------------------------------
+
+knockout_population = goalkeeping_clean[
+    goalkeeping_clean["Stage"] == "Knockout"
+].copy()
+
+elimination_population = goalkeeping_clean[
+    goalkeeping_clean["Stage"] == "Group-stage elimination"
+].copy()
+
+
+print("\nPopulation sizes before sampling:")
+
+print(
+    f"Knockout: {len(knockout_population)}"
+)
+
+print(
+    f"Group-stage elimination: {len(elimination_population)}"
+)
+
+
+# ------------------------------------------------------------
+# Take random sample from each stratum
+# ------------------------------------------------------------
+
+knockout_sample = knockout_population.sample(
+    n=SAMPLE_SIZE_PER_GROUP,
+    random_state=RANDOM_SEED
+)
+
+elimination_sample = elimination_population.sample(
+    n=SAMPLE_SIZE_PER_GROUP,
+    random_state=RANDOM_SEED
+)
+
+
+# ------------------------------------------------------------
+# Combine samples
+# ------------------------------------------------------------
+
+sample_data = pd.concat(
+    [
+        knockout_sample,
+        elimination_sample
+    ],
+    ignore_index=True
+)
+
+
+print("\nSampling method:")
+print("Equal-allocation stratified random sampling")
+
+print("\nRandom seed:")
+print(RANDOM_SEED)
+
+print("\nSample size per group:")
+print(SAMPLE_SIZE_PER_GROUP)
+
+print("\nTotal sample size:")
+print(len(sample_data))
+
+print("\nSample group counts:")
+
+print(
+    sample_data["Stage"]
+    .value_counts()
+)
+
+
+print("\nSelected random sample:")
+
+print(
+    sample_data[
+        [
+            "Player",
+            "Team",
+            "Save%",
+            "Stage"
+        ]
+    ]
+    .sort_values(
+        ["Stage", "Team"]
+    )
+    .to_string(index=False)
+)
 
 
 # ============================================================
-# 10. DESCRIPTIVE STATISTICS
+# STAGE 4 - STATISTICAL ANALYSIS
 # ============================================================
 
-print("\n" + "=" * 70)
-print("DESCRIPTIVE STATISTICS")
-print("=" * 70)
+print("\n" + "=" * 75)
+print("STAGE 4: STATISTICAL ANALYSIS")
+print("=" * 75)
 
+
+# ------------------------------------------------------------
+# Descriptive statistics
+# ------------------------------------------------------------
 
 descriptive_stats = (
-    goalkeeping_clean
+    sample_data
     .groupby("Stage")["Save%"]
     .agg(
         Count="count",
@@ -869,171 +391,149 @@ descriptive_stats = (
 )
 
 
-print("\nSave% descriptive statistics:")
+print("\nDescriptive statistics:")
+
 print(
     descriptive_stats.round(2)
 )
 
 
-# ============================================================
-# 11. SEPARATE THE TWO GROUPS
-# ============================================================
+# ------------------------------------------------------------
+# Separate groups
+# ------------------------------------------------------------
 
-knockout = goalkeeping_clean[
-    goalkeeping_clean["Stage"] == "Knockout"
-]["Save%"]
+knockout = sample_data.loc[
+    sample_data["Stage"] == "Knockout",
+    "Save%"
+]
 
-
-group_elimination = goalkeeping_clean[
-    goalkeeping_clean["Stage"] == "Group-stage elimination"
-]["Save%"]
-
-
-print("\n" + "=" * 70)
-print("GROUP DATA")
-print("=" * 70)
+group_eliminated = sample_data.loc[
+    sample_data["Stage"] == "Group-stage elimination",
+    "Save%"
+]
 
 
-print("\nKnockout-stage goalkeeper Save%:")
-print(knockout.to_string(index=False))
+# ------------------------------------------------------------
+# Means
+# ------------------------------------------------------------
 
-
-print("\nGroup-stage elimination goalkeeper Save%:")
-print(group_elimination.to_string(index=False))
-
-
-# ============================================================
-# 12. 95% CONFIDENCE INTERVALS
-# ============================================================
-
-print("\n" + "=" * 70)
-print("95% CONFIDENCE INTERVALS")
-print("=" * 70)
-
-
-# Function to calculate 95% CI
-def confidence_interval(data, confidence=0.95):
-
-    n = len(data)
-
-    mean = np.mean(data)
-
-    standard_error = stats.sem(data)
-
-    margin_of_error = (
-        stats.t.ppf(
-            (1 + confidence) / 2,
-            n - 1
-        )
-        * standard_error
-    )
-
-    lower = mean - margin_of_error
-    upper = mean + margin_of_error
-
-    return lower, upper
-
-
-# Knockout CI
-knockout_ci = confidence_interval(knockout)
-
-
-# Group-stage elimination CI
-elimination_ci = confidence_interval(
-    group_elimination
-)
-
-
-print(
-    f"\nKnockout-stage 95% CI: "
-    f"{knockout_ci[0]:.2f}% to {knockout_ci[1]:.2f}%"
-)
-
-
-print(
-    f"Group-stage elimination 95% CI: "
-    f"{elimination_ci[0]:.2f}% to {elimination_ci[1]:.2f}%"
-)
-
-
-# ============================================================
-# 13. DIFFERENCE IN MEANS
-# ============================================================
-
-print("\n" + "=" * 70)
-print("DIFFERENCE IN MEAN SAVE%")
-print("=" * 70)
-
+knockout_mean = knockout.mean()
+eliminated_mean = group_eliminated.mean()
 
 mean_difference = (
-    knockout.mean()
-    - group_elimination.mean()
+    knockout_mean - eliminated_mean
 )
 
 
-print(
-    f"\nMean Save% - Knockout: "
-    f"{knockout.mean():.2f}%"
-)
+print("\nMean Save% - Knockout:")
+print(f"{knockout_mean:.2f}%")
 
-print(
-    f"Mean Save% - Group-stage elimination: "
-    f"{group_elimination.mean():.2f}%"
-)
+print("\nMean Save% - Group-stage elimination:")
+print(f"{eliminated_mean:.2f}%")
 
+print("\nDifference in means:")
 print(
-    f"\nDifference in mean Save%: "
     f"{mean_difference:.2f} percentage points"
 )
 
 
-# ============================================================
-# 14. INDEPENDENT TWO-SAMPLE T-TEST
-# ============================================================
+# ------------------------------------------------------------
+# 95% confidence interval function
+# ------------------------------------------------------------
 
-print("\n" + "=" * 70)
-print("INDEPENDENT TWO-SAMPLE T-TEST")
-print("=" * 70)
+def calculate_ci(data, confidence=0.95):
+
+    n = len(data)
+
+    mean = data.mean()
+
+    standard_error = stats.sem(data)
+
+    t_critical = stats.t.ppf(
+        (1 + confidence) / 2,
+        df=n - 1
+    )
+
+    margin_error = (
+        t_critical * standard_error
+    )
+
+    lower = mean - margin_error
+    upper = mean + margin_error
+
+    return lower, upper
 
 
-# Welch's independent two-sample t-test
-# equal_var=False is used because the two groups
-# may have different variances.
+knockout_ci = calculate_ci(
+    knockout
+)
+
+eliminated_ci = calculate_ci(
+    group_eliminated
+)
+
+
+print("\n95% confidence intervals:")
+
+print(
+    f"Knockout: "
+    f"{knockout_ci[0]:.2f}% to {knockout_ci[1]:.2f}%"
+)
+
+print(
+    f"Group-stage elimination: "
+    f"{eliminated_ci[0]:.2f}% to {eliminated_ci[1]:.2f}%"
+)
+
+
+# ------------------------------------------------------------
+# Hypotheses
+# ------------------------------------------------------------
+
+print("\nHypotheses:")
+
+print(
+    "H0: Mean Save% is equal between knockout-stage "
+    "goalkeepers and group-stage eliminated goalkeepers."
+)
+
+print(
+    "H1: Mean Save% differs between knockout-stage "
+    "goalkeepers and group-stage eliminated goalkeepers."
+)
+
+
+# ------------------------------------------------------------
+# Welch independent two-sample t-test
+# ------------------------------------------------------------
 
 t_statistic, p_value = stats.ttest_ind(
     knockout,
-    group_elimination,
+    group_eliminated,
     equal_var=False
 )
 
 
+print("\nWelch independent two-sample t-test:")
+
 print(
-    f"\nT-statistic: "
-    f"{t_statistic:.4f}"
+    f"T-statistic: {t_statistic:.4f}"
 )
 
 print(
-    f"P-value: "
-    f"{p_value:.4f}"
+    f"P-value: {p_value:.4f}"
 )
 
 
-# ============================================================
-# 15. STATISTICAL DECISION
-# ============================================================
+# ------------------------------------------------------------
+# Statistical decision
+# ------------------------------------------------------------
 
 alpha = 0.05
 
 
-print("\n" + "=" * 70)
-print("STATISTICAL DECISION")
-print("=" * 70)
-
-
-print(
-    f"\nSignificance level (alpha): "
-    f"{alpha}"
-)
+print("\nSignificance level:")
+print(alpha)
 
 
 if p_value < alpha:
@@ -1044,8 +544,7 @@ if p_value < alpha:
 
     print(
         "There is statistically significant evidence "
-        "of a difference in average Save% between "
-        "the two groups."
+        "that mean Save% differs between the two groups."
     )
 
 else:
@@ -1055,84 +554,73 @@ else:
     )
 
     print(
-        "There is not statistically significant evidence "
-        "of a difference in average Save% between "
+        "There is insufficient statistical evidence "
+        "to conclude that mean Save% differs between "
         "the two groups."
     )
 
 
-# ============================================================
-# 16. RESEARCH QUESTION INTERPRETATION
-# ============================================================
+# ------------------------------------------------------------
+# Final interpretation
+# ------------------------------------------------------------
 
-print("\n" + "=" * 70)
-print("RESEARCH QUESTION INTERPRETATION")
-print("=" * 70)
+print("\n" + "-" * 75)
+print("FINAL INTERPRETATION")
+print("-" * 75)
 
 
 print(
-    "\nResearch question:"
+    f"\nThe knockout-stage sample had an average Save% "
+    f"of {knockout_mean:.2f}%, while the group-stage "
+    f"elimination sample had an average Save% of "
+    f"{eliminated_mean:.2f}%."
 )
 
+
 print(
-    "Do goalkeepers from teams that progressed to "
-    "the knockout stage differ significantly in "
-    "average Save% from goalkeepers whose teams "
-    "were eliminated in the group stage?"
+    f"The observed difference was "
+    f"{mean_difference:.2f} percentage points."
+)
+
+
+print(
+    f"Welch's independent two-sample t-test produced "
+    f"t = {t_statistic:.2f} and p = {p_value:.4f}."
 )
 
 
 if p_value < alpha:
 
     print(
-        "\nConclusion:"
-    )
-
-    print(
-        f"The results indicate that average Save% "
-        f"differs significantly between the two groups "
-        f"(t = {t_statistic:.2f}, p = {p_value:.4f}). "
-        f"The knockout-stage group had a mean Save% "
-        f"of {knockout.mean():.2f}%, compared with "
-        f"{group_elimination.mean():.2f}% for the "
-        f"group-stage elimination group."
+        "At the 5% significance level, the result is "
+        "statistically significant."
     )
 
 else:
 
     print(
-        "\nConclusion:"
-    )
-
-    print(
-        f"The results do not provide sufficient evidence "
-        f"that average Save% differs significantly between "
-        f"the two groups "
-        f"(t = {t_statistic:.2f}, p = {p_value:.4f}). "
-        f"The knockout-stage group had a mean Save% "
-        f"of {knockout.mean():.2f}%, compared with "
-        f"{group_elimination.mean():.2f}% for the "
-        f"group-stage elimination group."
+        "At the 5% significance level, the result is "
+        "not statistically significant."
     )
 
 
 # ============================================================
-# 17. VISUALISATION 1 - BAR CHART
+# VISUALISATION 1 - BAR CHART
 # ============================================================
 
-print("\n" + "=" * 70)
-print("CREATING BAR CHART")
-print("=" * 70)
-
-
-plt.figure(figsize=(8, 6))
+print("\nCreating bar chart...")
 
 
 bar_data = (
-    goalkeeping_clean
+    sample_data
     .groupby("Stage")["Save%"]
     .mean()
     .reset_index()
+)
+
+
+plt.figure(
+    figsize=(9, 6)
 )
 
 
@@ -1144,98 +632,165 @@ sns.barplot(
 
 
 plt.title(
-    "Average Goalkeeper Save% by Team Progression"
+    "Average Goalkeeper Save% by Tournament Progression"
 )
 
 plt.xlabel(
-    "Team progression"
+    "Tournament progression"
 )
 
 plt.ylabel(
-    "Average Save%"
+    "Average Save Percentage (%)"
 )
 
-plt.ylim(0, 100)
+plt.ylim(
+    0,
+    100
+)
 
 plt.tight_layout()
+
+
+bar_chart_path = (
+    PROJECT_ROOT
+    / "goalkeeper_save_percentage_bar_chart.png"
+)
+
+plt.savefig(
+    bar_chart_path,
+    dpi=300,
+    bbox_inches="tight"
+)
 
 plt.show()
 
 
 # ============================================================
-# 18. VISUALISATION 2 - BOX PLOT
+# VISUALISATION 2 - BOX PLOT
 # ============================================================
 
-print("\n" + "=" * 70)
-print("CREATING BOX PLOT")
-print("=" * 70)
+print("\nCreating box plot...")
 
 
-plt.figure(figsize=(8, 6))
+plt.figure(
+    figsize=(9, 6)
+)
 
 
 sns.boxplot(
-    data=goalkeeping_clean,
+    data=sample_data,
     x="Stage",
     y="Save%"
 )
 
 
 sns.stripplot(
-    data=goalkeeping_clean,
+    data=sample_data,
     x="Stage",
     y="Save%",
     color="black",
-    alpha=0.6
+    alpha=0.65
 )
 
 
 plt.title(
-    "Distribution of Goalkeeper Save% by Team Progression"
+    "Distribution of Goalkeeper Save% by Tournament Progression"
 )
 
 plt.xlabel(
-    "Team progression"
+    "Tournament progression"
 )
 
 plt.ylabel(
-    "Save%"
+    "Save Percentage (%)"
 )
 
-plt.ylim(0, 100)
+plt.ylim(
+    0,
+    100
+)
 
 plt.tight_layout()
+
+
+boxplot_path = (
+    PROJECT_ROOT
+    / "goalkeeper_save_percentage_boxplot.png"
+)
+
+plt.savefig(
+    boxplot_path,
+    dpi=300,
+    bbox_inches="tight"
+)
 
 plt.show()
 
 
 # ============================================================
-# 19. FINAL SUMMARY
+# SAVE OUTPUT DATA
 # ============================================================
 
-print("\n" + "=" * 70)
-print("STAGE 3 COMPLETE")
-print("=" * 70)
+sample_output_path = (
+    PROJECT_ROOT
+    / "goalkeeper_random_sample.csv"
+)
+
+stats_output_path = (
+    PROJECT_ROOT
+    / "goalkeeper_descriptive_statistics.csv"
+)
+
+
+sample_data.to_csv(
+    sample_output_path,
+    index=False
+)
+
+
+descriptive_stats.to_csv(
+    stats_output_path
+)
+
+
+# ============================================================
+# FINAL SUMMARY
+# ============================================================
+
+print("\n" + "=" * 75)
+print("ANALYSIS COMPLETE")
+print("=" * 75)
+
+
+print("\nRaw goalkeeper observations:")
+print(raw_count)
+
+print("\nEligible observations:")
+print(valid_count)
+
+print("\nFinal random sample:")
+print(len(sample_data))
+
+print("\nSampling method:")
+print(
+    "Equal-allocation stratified random sampling "
+    "(15 per group)"
+)
+
+print("\nOutput files created:")
 
 print(
-    "\nStatistical analysis completed."
+    bar_chart_path
 )
 
 print(
-    "\nThe analysis includes:"
+    boxplot_path
 )
 
-print("- Descriptive statistics")
-print("- Group means")
-print("- Median")
-print("- Standard deviation")
-print("- 95% confidence intervals")
-print("- Difference in means")
-print("- Independent two-sample t-test")
-print("- Bar chart")
-print("- Box plot")
+print(
+    sample_output_path
+)
 
 print(
-    "\nSave the terminal output and the two charts "
-    "for your assignment."
+    stats_output_path
 )
